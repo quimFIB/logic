@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "logic:lib"
+
+    - path: "./app/Main.hs"
+      component: "logic:exe:logic-exe"
+
+    - path: "./app/Paths_logic.hs"
+      component: "logic:exe:logic-exe"
+
+    - path: "./test"
+      component: "logic:test:logic-test"
