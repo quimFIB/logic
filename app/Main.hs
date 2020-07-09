@@ -2,5 +2,9 @@ module Main where
 
 import Lib
 
+eq = Equal (VarT "x") (VarT "y")
+
 main :: IO ()
-main = someFunc
+main = do
+        putStrLn "Test main"
+        putStrLn (showEqual eq)

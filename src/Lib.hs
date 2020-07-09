@@ -1,11 +1,4 @@
-module Lib
-    ( someFunc,
-      Var,
-      showVar,
-      Term,
-      showTerm,
-      reflex
-    ) where
+module Lib where
 
 import qualified Data.MultiSet as MultiSet
 import qualified Data.Set as Set
@@ -34,7 +27,10 @@ term2var t = case t of
 showTerm :: Term -> String
 showTerm (VarT s) = s
 showTerm (Term s l) = s ++ "(" ++ intercalate "," (map showTerm l) ++ ")"
+
 data Equal = Equal Term Term deriving (Eq, Ord)
+showEqual :: Equal -> String
+showEqual (Equal t_l t_r) = showTerm t_l ++ " = " ++ showTerm t_r
 
 reflex :: Equal -> Equal
 reflex (Equal t0 t1) = Equal t1 t0
