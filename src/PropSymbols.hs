@@ -1,8 +1,9 @@
-module Lib where
+module PropSymbols where
+
+import Data.List (intercalate)
 
 import qualified Data.MultiSet as MultiSet
 import qualified Data.Set as Set
-import Data.List (intercalate)
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
@@ -43,3 +44,22 @@ sub eq@(Equal t_l t_r) t = if t_l == t then t_r else
 occurs :: Var -> Term -> Bool
 occurs v (Term _ l) = or (map (occurs v) l)
 occurs v (VarT s) = v == Var s
+
+conflict :: Term -> Term -> Bool
+conflict (Term f l_f) (Term g l_g) = f /= g || length l_f /= length l_g
+conflict _ _ = False
+
+decomposable :: Equal -> Bool
+decomposable (Equal t_l@(Term _ _) t_r@(Term _ _)) = not $ conflict t_l t_r
+decomposable _ = False
+
+decompose :: Equal -> [Equal]
+decompose (Equal (Term _ l_l) (Term _ l_r)) =  zipWith (\x y -> Equal x y) l_l l_r
+decompose _ = []
+
+getVarsTerm :: Term -> MultiSet.MultiSet Var
+getVarsTerm (VarT s) = MultiSet.insert (Var s) MultiSet.empty
+getVarsTerm (Term _ l_f) = MultiSet.unions $ map getVarsTerm l_f
+
+getVarsEq :: Equal -> MultiSet.MultiSet Var
+getVarsEq (Equal t_l t_r) = MultiSet.union (getVarsTerm t_l) (getVarsTerm t_r)

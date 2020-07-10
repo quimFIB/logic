@@ -1,6 +1,6 @@
 module Main where
 
-import Lib
+import PropSymbols
 
 eq = Equal (VarT "x") (VarT "y")
 

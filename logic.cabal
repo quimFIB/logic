@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2e57b88e5e1b2b1637888c20f4a72c02481dda4fdf93888e372dd579edc8b581
+-- hash: d4623f34483985e48814bd2c6e82988614c4a27827edf089a53b58c5e96a4270
 
 name:           logic
 version:        0.1.0.0
@@ -27,7 +27,10 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      EqSet
+      PropSymbols
+      UnifAlg
+      UniSet
   other-modules:
       Paths_logic
   hs-source-dirs:
