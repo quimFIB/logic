@@ -2,19 +2,19 @@ module PropSymbols where
 
 import Data.List (intercalate)
 
-import qualified Data.MultiSet as MultiSet
-import qualified Data.Set as Set
+import qualified Data.Map as Map
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
 
-newtype Var = Var String deriving (Eq, Ord)
+newtype Var = Var String deriving (Eq, Ord, Show)
 
 showVar :: Var -> String
 showVar (Var s) = s
 
 var2term :: Var -> Term
 var2term (Var s) = VarT s
+
 
 data Term = VarT String
           | Term String [Term]
@@ -29,9 +29,15 @@ showTerm :: Term -> String
 showTerm (VarT s) = s
 showTerm (Term s l) = s ++ "(" ++ intercalate "," (map showTerm l) ++ ")"
 
+instance Show Term where
+  show = showTerm
+
 data Equal = Equal Term Term deriving (Eq, Ord)
 showEqual :: Equal -> String
 showEqual (Equal t_l t_r) = showTerm t_l ++ " = " ++ showTerm t_r
+
+instance Show Equal where
+  show = showEqual
 
 reflex :: Equal -> Equal
 reflex (Equal t0 t1) = Equal t1 t0
@@ -57,9 +63,10 @@ decompose :: Equal -> [Equal]
 decompose (Equal (Term _ l_l) (Term _ l_r)) =  zipWith (\x y -> Equal x y) l_l l_r
 decompose _ = []
 
-getVarsTerm :: Term -> MultiSet.MultiSet Var
-getVarsTerm (VarT s) = MultiSet.insert (Var s) MultiSet.empty
-getVarsTerm (Term _ l_f) = MultiSet.unions $ map getVarsTerm l_f
+getVarsTerm :: Term -> Map.Map Var Int
+-- getVarsTerm (VarT s) = Map.insertWith' (+) (Var s) 1 Map.empty
+getVarsTerm (VarT s) = Map.insert (Var s) 1 Map.empty
+getVarsTerm (Term _ l_f) = Map.unions $ map getVarsTerm l_f
 
-getVarsEq :: Equal -> MultiSet.MultiSet Var
-getVarsEq (Equal t_l t_r) = MultiSet.union (getVarsTerm t_l) (getVarsTerm t_r)
+getVarsEq :: Equal -> Map.Map Var Int
+getVarsEq (Equal t_l t_r) = Map.unionWith (+) (getVarsTerm t_l) (getVarsTerm t_r)
