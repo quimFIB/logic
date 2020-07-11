@@ -48,13 +48,13 @@ unifyStep (set, candidates, eq0@(PS.Equal (PS.Term f l) (PS.VarT x))) = (UniSet 
                                                                           (Set.insert (PS.reflex eq0) (Set.delete eq0 (UniSet.eqSet set))), (Log Flip eq0 Var2Var))
 
 unifyStep (set, candidates, eq0@(PS.Equal (PS.VarT x) t@(PS.Term f l))) = let {contains = UniSet.contains (PS.Var x) set; occurs = occursCheck eq0} in
-                                                                             if contains &&  not occurs then let subs_set = UniSet.substitute eq0 (UniSet.remove eq0 set) in
-                                                                               (UniSet.add eq0 subs_set, Set.fromList $ map fst $ ES.substitute eq0 (Set.delete eq0 candidates), Log Eliminate eq0 Var2Term)
+                                                                             if contains &&  not occurs then let subs_set = UniSet.substitute eq0 (UniSet.delete eq0 set) in
+                                                                               (UniSet.insert eq0 subs_set, Set.fromList $ map fst $ ES.substitute eq0 (Set.delete eq0 candidates), Log Eliminate eq0 Var2Term)
                                                                              else if not contains then (set, Set.delete eq0 candidates, Log Del eq0 Var2Term)
                                                                              else (UniSet.empty, Set.empty, Log Fail eq0 Term2Term)
 unifyStep (set, candidates, eq0@(PS.Equal t_l t_r))
-  | t_l == t_r = (UniSet.remove eq0 set, Set.delete eq0 candidates, Log Del eq0 Term2Term)
-  | PS.decomposable eq0 = let new_eqs_list = PS.decompose eq0 in (UniSet.union (UniSet.fromList new_eqs_list) (UniSet.remove eq0 set),
+  | t_l == t_r = (UniSet.delete eq0 set, Set.delete eq0 candidates, Log Del eq0 Term2Term)
+  | PS.decomposable eq0 = let new_eqs_list = PS.decompose eq0 in (UniSet.union (UniSet.fromList new_eqs_list) (UniSet.delete eq0 set),
                                                                    Set.union (Set.delete eq0 candidates) (Set.fromList new_eqs_list),
                                                                    Log Decompose eq0 Term2Term)
   | otherwise = (UniSet.empty, Set.empty, Log Fail eq0 Term2Term)

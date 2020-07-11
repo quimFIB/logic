@@ -3,6 +3,7 @@ module PropSymbols where
 import Data.List (intercalate)
 
 import qualified Data.Map as Map
+import Data.Fix
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
@@ -70,3 +71,16 @@ getVarsTerm (Term _ l_f) = Map.unions $ map getVarsTerm l_f
 
 getVarsEq :: Equal -> Map.Map Var Int
 getVarsEq (Equal t_l t_r) = Map.unionWith (+) (getVarsTerm t_l) (getVarsTerm t_r)
+
+data Atom = Pred String [Term]
+data Literal a = Pos a | Neg a
+
+-- I don't know what I am doing LMAO
+data FormF a = Gnd Atom
+            | And (FormF a) (FormF a)
+            | Or (FormF a) (FormF a)
+            | Not (FormF a)
+            | Forall Var (FormF a)
+            | Exists Var (FormF a)
+
+type Form = Fix FormF
