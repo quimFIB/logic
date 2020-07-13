@@ -2,7 +2,7 @@
 
 module Clause where
 
-import Form
+import PropSymbols
 import Data.Set
 
-newtype Clause = Set (Literal Atom)
+newtype Clause = Set (Literal)

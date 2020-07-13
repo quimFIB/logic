@@ -24,6 +24,7 @@ dependencies:
 - multiset
 - containers
 - data-fix
+- recursion-schemes
 
 library:
   source-dirs: src

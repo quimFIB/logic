@@ -70,3 +70,41 @@ getVarsTerm (Term _ l_f) = Map.unions $ map getVarsTerm l_f
 
 getVarsEq :: Equal -> Map.Map Var Int
 getVarsEq (Equal t_l t_r) = Map.unionWith (+) (getVarsTerm t_l) (getVarsTerm t_r)
+
+-- Helpers for FOL
+
+data Atom = Pred String [Term]
+
+showAtom :: Atom -> String
+showAtom (Pred str []) =  str
+showAtom (Pred str l) =  str ++ "(" ++ intercalate "," (map showTerm l) ++ ")"
+
+instance Show Atom where
+  show = showAtom
+
+data Negation a = Pos a | Neg a
+
+showNegation :: Show a => Negation a -> String
+showNegation (Pos x) = show x
+showNegation (Neg x) = "¬" ++ show x
+
+instance Show a => Show (Negation a) where
+  show = showNegation
+
+flipN :: Negation a -> Negation a
+flipN (Pos x) = Neg x
+flipN (Neg x) = Pos x
+
+-- For some reason this type synonym gives quite a few errors???
+-- newtype Literal = Negation Atom
+
+-- showLiteral :: Negation Atom -> String
+-- showLiteral (Pos a) = show a
+-- showLiteral (Neg a) = "¬" ++ show a
+
+-- instance Show (Negation Atom) where
+--   show = showNegation
+
+-- neg :: Literal -> Literal  -- not working???
+neg :: Negation Atom -> Negation Atom
+neg = flipN
