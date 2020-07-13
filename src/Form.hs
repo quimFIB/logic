@@ -3,7 +3,7 @@
 module Form where
 import qualified PropSymbols as PS
 import Data.Fix
-
+import Common
 -- type Algebra f a = f a -> a
 -- I don't know what I am doing LMAO
 data FormF a = Ltr (PS.Negation PS.Atom)
@@ -19,11 +19,18 @@ type Form = Fix FormF
 
 showForm :: FormF String -> String
 showForm (Ltr l) = show l
-showForm (And s0 s1) = s0 ++ "∧" ++ s1
-showForm (Or s0 s1) = s0 ++ "∨" ++ s1
-showForm (Forall x s) = "∀" ++ show x ++ s
-showForm (Exists x s) = "∃" ++ show x ++ s
+showForm (And s0 s1) = "(" ++ s0 ++ ")" ++ "∧" ++ "(" ++ s1 ++ ")"
+showForm (Or s0 s1) = "(" ++ s0 ++ ")" ++ "∨" ++ "(" ++ s1 ++ ")"
+showForm (Forall x s) = "∀" ++ show x ++ s ++ "."
+showForm (Exists x s) = "∃" ++ show x ++ s ++ "."
 -- showForm (Not s) = "¬" ++ s
+
+toTree :: FormF (Tree String) -> Tree String
+toTree (Ltr t) = Leaf (show t)
+toTree (And t0 t1) = Twice "∧" t0 t1
+toTree (Or t0 t1) = Twice "∨" t0 t1
+toTree (Forall x t) = Once ("∀" ++ show x ++ ".") t
+toTree (Exists x t) = Once ("∃" ++ show x ++ ".") t
 
 neg :: FormF Form -> Form
 neg (Ltr l) = Fix (Ltr l)

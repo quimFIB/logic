@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e338d0ca97b93543f8622d5340cb885d5b4c651711bc171503a896752fa82145
+-- hash: a5d4d6e3888e728279b4cc387dbf81a79068ba096ead2365eedb37b8d271e1b9
 
 name:           logic
 version:        0.1.0.0
@@ -28,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       Clause
+      Common
       EqSet
       Form
       PropSymbols
