@@ -60,8 +60,9 @@ toTree (Qtfy qlist t) = Once (concatMap show qlist) t
 -- Start Prenex stuff
 data PrenexForm = Prenex [VarQtfy] Qfree.Form
 
+-- We assume that there no repeated variables in the formula
 prenex :: FormF PrenexForm -> PrenexForm
 prenex (Ltr l) = Prenex [] (Fix (Qfree.Ltr l))
-prenex (And (Prenex _ f0) (Prenex _ f1)) = Prenex [] (Fix (Qfree.Or f0 f1))
-prenex (Or (Prenex _ f0) (Prenex _ f1)) = Prenex [] (Fix (Qfree.And f0 f1))
+prenex (And (Prenex l0 f0) (Prenex l1 f1)) = Prenex (l0 ++ l1) (Fix (Qfree.And f0 f1))
+prenex (Or (Prenex l0 f0) (Prenex l1 f1)) = Prenex (l0 ++ l1) (Fix (Qfree.Or f0 f1))
 prenex (Qtfy qlist (Prenex q'list f)) = Prenex (qlist ++ q'list) f
