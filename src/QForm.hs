@@ -60,11 +60,8 @@ toTree (Qtfy qlist t) = Once (concatMap show qlist) t
 -- Start Prenex stuff
 data PrenexForm = Prenex [VarQtfy] Qfree.Form
 
-discardQualifiers :: PrenexForm -> Qfree.Form
-discardQualifiers (Prenex _ f) = f
-
 prenex :: FormF PrenexForm -> PrenexForm
 prenex (Ltr l) = Prenex [] (Fix (Qfree.Ltr l))
-prenex (And f0 f1) = Prenex [] (Fix (Qfree.Or (discardQualifiers f0) (discardQualifiers f1)))
-prenex (Or f0 f1) = Prenex [] (Fix (Qfree.And (discardQualifiers f0) (discardQualifiers f1)))
+prenex (And (Prenex _ f0) (Prenex _ f1)) = Prenex [] (Fix (Qfree.Or f0 f1))
+prenex (Or (Prenex _ f0) (Prenex _ f1)) = Prenex [] (Fix (Qfree.And f0 f1))
 prenex (Qtfy qlist (Prenex q'list f)) = Prenex (qlist ++ q'list) f
