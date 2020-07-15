@@ -13,18 +13,22 @@ data FormF a = Ltr (LS.Negation LS.Atom)
 
 type Form = Fix FormF
 
+instance Functor FormF  where
+  fmap eval (Ltr l) = Ltr l
+  fmap eval (And x y) = And (eval x) (eval y)
+  fmap eval (Or x y) = Or (eval x) (eval y)
 -- type FormStr = Algebra FormF String
 
 showForm :: FormF String -> String
 showForm (Ltr l) = show l
-showForm (And s0 s1) = "(" ++ s0 ++ ")" ++ "∧" ++ "(" ++ s1 ++ ")"
-showForm (Or s0 s1) = "(" ++ s0 ++ ")" ++ "∨" ++ "(" ++ s1 ++ ")"
+showForm (And s0 s1) = "(" ++ s0 ++ ")" ++ " and " ++ "(" ++ s1 ++ ")"
+showForm (Or s0 s1) = "(" ++ s0 ++ ")" ++ " or " ++ "(" ++ s1 ++ ")"
 -- showForm (Not s) = "¬" ++ s
 
 toTree :: FormF (Tree String) -> Tree String
 toTree (Ltr t) = Leaf (show t)
-toTree (And t0 t1) = Twice "∧" t0 t1
-toTree (Or t0 t1) = Twice "∨" t0 t1
+toTree (And t0 t1) = Twice "and" t0 t1
+toTree (Or t0 t1) = Twice "or" t0 t1
 
 neg :: FormF Form -> Form
 neg (Ltr l) = Fix (Ltr l)

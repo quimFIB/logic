@@ -10,8 +10,8 @@ data Quantifier a = Forall a | Exists a
 
 
 showQtfier :: Show a => Quantifier a -> String
-showQtfier (Forall a) = "∀" ++ show a
-showQtfier (Exists a) = "∃" ++ show a
+showQtfier (Forall a) = "F " ++ show a
+showQtfier (Exists a) = "E " ++ show a
 
 instance Show a => Show (Quantifier a) where
   show = showQtfier
@@ -38,15 +38,15 @@ neg (Qtfy qlist f) = Fix (Qtfy (map flipQtfier qlist) f)
 
 showForm :: FormF String -> String
 showForm (Ltr l) = show l
-showForm (And s0 s1) = "(" ++ s0 ++ ")" ++ "∧" ++ "(" ++ s1 ++ ")"
-showForm (Or s0 s1) = "(" ++ s0 ++ ")" ++ "∨" ++ "(" ++ s1 ++ ")"
+showForm (And s0 s1) = "(" ++ s0 ++ ")" ++ " and " ++ "(" ++ s1 ++ ")"
+showForm (Or s0 s1) = "(" ++ s0 ++ ")" ++ " or " ++ "(" ++ s1 ++ ")"
 showForm (Qtfy qlist s) =  "(" ++ concatMap show qlist ++ ".(" ++ show s ++ ")"
 -- showForm (Not s) = "¬" ++ s
 
 toTree :: FormF (Tree String) -> Tree String
 toTree (Ltr t) = Leaf (show t)
-toTree (And t0 t1) = Twice "∧" t0 t1
-toTree (Or t0 t1) = Twice "∨" t0 t1
+toTree (And t0 t1) = Twice " and " t0 t1
+toTree (Or t0 t1) = Twice " or " t0 t1
 toTree (Qtfy qlist t) = Once (concatMap show qlist) t
 
 

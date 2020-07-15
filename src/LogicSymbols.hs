@@ -4,9 +4,6 @@ import Data.List (intercalate)
 
 import qualified Data.Map as Map
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
-
 newtype Var = Var String deriving (Eq, Ord, Show)
 
 showVar :: Var -> String
@@ -86,7 +83,7 @@ data Negation a = Pos a | Neg a
 
 showNegation :: Show a => Negation a -> String
 showNegation (Pos x) = show x
-showNegation (Neg x) = "¬" ++ show x
+showNegation (Neg x) = "!" ++ show x
 
 instance Show a => Show (Negation a) where
   show = showNegation
@@ -100,7 +97,7 @@ newtype Literal = Negation Atom
 
 showLiteral :: Negation Atom -> String
 showLiteral (Pos a) = show a
-showLiteral (Neg a) = "¬" ++ show a
+showLiteral (Neg a) = "!" ++ show a
 
 -- instance Show (Negation Atom) where
 --   show = showNegation
