@@ -44,4 +44,4 @@ main = do
         putStrLn (show $ Prelude.map (\(_,y,_) -> y) computation)
         putStrLn (show $ Prelude.map (\(_,_,z) -> z) computation)
         putStrLn (show $ cata Qfree.toTree randomFormula)
-        putStrLn (show $ cata QF.toTree randomFormula2)
+        putStrLn (show $ cata QF.toTree $ (cata QF.neg randomFormula2))

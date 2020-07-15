@@ -31,6 +31,6 @@ toTree (And t0 t1) = Twice "and" t0 t1
 toTree (Or t0 t1) = Twice "or" t0 t1
 
 neg :: FormF Form -> Form
-neg (Ltr l) = Fix (Ltr l)
+neg (Ltr l) = Fix (Ltr (LS.flipN l))
 neg (And f0 f1) = Fix (Or f0 f1)
 neg (Or f0 f1) = Fix (And f0 f1)

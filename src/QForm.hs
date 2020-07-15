@@ -37,7 +37,7 @@ instance Functor FormF  where
   fmap eval (Qtfy qlist p) = Qtfy qlist (eval p)
 
 neg :: FormF Form -> Form
-neg (Ltr l) = Fix (Ltr l)
+neg (Ltr l) = Fix (Ltr (LS.flipN l))
 neg (And f0 f1) = Fix (Or f0 f1)
 neg (Or f0 f1) = Fix (And f0 f1)
 neg (Qtfy qlist f) = Fix (Qtfy (map flipQtfier qlist) f)
