@@ -15,8 +15,8 @@ type Form = Fix FormF
 
 instance Functor FormF  where
   fmap eval (Ltr l) = Ltr l
-  fmap eval (And x y) = And (eval x) (eval y)
-  fmap eval (Or x y) = Or (eval x) (eval y)
+  fmap eval (And p q) = And (eval p) (eval q)
+  fmap eval (Or p q) = Or (eval p) (eval q)
 -- type FormStr = Algebra FormF String
 
 showForm :: FormF String -> String

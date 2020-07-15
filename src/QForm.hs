@@ -10,8 +10,8 @@ data Quantifier a = Forall a | Exists a
 
 
 showQtfier :: Show a => Quantifier a -> String
-showQtfier (Forall a) = "F " ++ show a
-showQtfier (Exists a) = "E " ++ show a
+showQtfier (Forall a) = "QF " ++ show a
+showQtfier (Exists a) = "QE " ++ show a
 
 instance Show a => Show (Quantifier a) where
   show = showQtfier
@@ -29,6 +29,12 @@ data FormF a = Ltr (LS.Negation LS.Atom)
             | Qtfy [VarQtfy] a
 
 type Form = Fix FormF
+
+instance Functor FormF  where
+  fmap eval (Ltr l) = Ltr l
+  fmap eval (And p q) = And (eval p) (eval q)
+  fmap eval (Or p q) = Or (eval p) (eval q)
+  fmap eval (Qtfy qlist p) = Qtfy qlist (eval p)
 
 neg :: FormF Form -> Form
 neg (Ltr l) = Fix (Ltr l)
