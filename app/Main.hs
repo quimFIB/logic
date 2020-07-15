@@ -1,6 +1,6 @@
 module Main where
 
-import PropSymbols
+import LogicSymbols
 import UnifAlg
 import Data.Set as Set
 import UniSet

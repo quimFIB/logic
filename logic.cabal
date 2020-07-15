@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a5d4d6e3888e728279b4cc387dbf81a79068ba096ead2365eedb37b8d271e1b9
+-- hash: bfc6dff5bc2e22d03e70d849269447c14f6ea0029c4f982c6a3ac37bab7b9263
 
 name:           logic
 version:        0.1.0.0
@@ -30,8 +30,9 @@ library
       Clause
       Common
       EqSet
-      Form
-      PropSymbols
+      LogicSymbols
+      QForm
+      QfreeForm
       UnifAlg
       UniSet
   other-modules:

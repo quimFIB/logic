@@ -2,7 +2,7 @@
 
 module Clause where
 
-import PropSymbols
+import LogicSymbols
 import Data.Set
 
 newtype Clause = Set (Literal)

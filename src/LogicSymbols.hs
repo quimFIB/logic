@@ -1,4 +1,4 @@
-module PropSymbols where
+module LogicSymbols where
 
 import Data.List (intercalate)
 
@@ -96,11 +96,11 @@ flipN (Pos x) = Neg x
 flipN (Neg x) = Pos x
 
 -- For some reason this type synonym gives quite a few errors???
--- newtype Literal = Negation Atom
+newtype Literal = Negation Atom
 
--- showLiteral :: Negation Atom -> String
--- showLiteral (Pos a) = show a
--- showLiteral (Neg a) = "¬" ++ show a
+showLiteral :: Negation Atom -> String
+showLiteral (Pos a) = show a
+showLiteral (Neg a) = "¬" ++ show a
 
 -- instance Show (Negation Atom) where
 --   show = showNegation
