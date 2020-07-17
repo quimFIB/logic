@@ -58,6 +58,20 @@ toTree (And lst) = Node "and" lst
 toTree (Or lst) = Node "or" lst
 toTree (Qtfy qlist t) = Node (concatMap show qlist) [t]
 
+flatAnd :: FormF Form -> [Form]
+flatAnd (And lst) = lst
+flatAnd f = [Fix f]
+
+flatOr :: FormF Form -> [Form]
+flatOr (Or lst) = lst
+flatOr f = [Fix f]
+
+flat :: FormF Form -> Form
+flat (Ltr l) = Fix (Ltr l)
+flat (And lst) = Fix (And (concatMap (flatAnd . unFix) lst))
+flat (Or lst) = Fix (Or (concatMap (flatOr . unFix) lst))
+flat (Qtfy qlist f) = Fix (Qtfy qlist f)
+
 -- Start Prenex stuff
 data PrenexForm = Prenex [VarQtfy] Qfree.Form
 

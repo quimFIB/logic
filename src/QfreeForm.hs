@@ -36,6 +36,19 @@ neg (Ltr l) = Fix (Ltr (LS.flipN l))
 neg (And lst) = Fix (Or lst)
 neg (Or lst) = Fix (And lst)
 
+flatAnd :: FormF Form -> [Form]
+flatAnd (And lst) = lst
+flatAnd f = [Fix f]
+
+flatOr :: FormF Form -> [Form]
+flatOr (Or lst) = lst
+flatOr f = [Fix f]
+
+flat :: FormF Form -> Form
+flat (Ltr l) = Fix (Ltr l)
+flat (And lst) = Fix (And (concatMap (flatAnd . unFix) lst))
+flat (Or lst) = Fix (Or (concatMap (flatOr . unFix) lst))
+
 -- distribute :: Form -> (Form -> Form -> Form) -> FormF Form -> Form
 -- distribute f c (Ltr l)  = c (Fix (Ltr l)) f
 -- distribute f c (And f0 f1) = c (distribute f makeOr (unFix f0)) (distribute f makeOr (unFix f1))
