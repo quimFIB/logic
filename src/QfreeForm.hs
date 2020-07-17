@@ -2,35 +2,46 @@
 
 module QfreeForm where
 import qualified LogicSymbols as LS
+import Data.Tree
 import Data.Fix
-import Common
+import Data.List (intercalate)
 -- type Algebra f a = f a -> a
 -- I don't know what I am doing LMAO
 data FormF a = Ltr (LS.Negation LS.Atom)
-            | And a a
-            | Or a a
+            | And [a]
+            | Or [a]
             -- | Not a
 
 type Form = Fix FormF
 
 instance Functor FormF  where
-  fmap eval (Ltr l) = Ltr l
-  fmap eval (And p q) = And (eval p) (eval q)
-  fmap eval (Or p q) = Or (eval p) (eval q)
+  fmap eval (Ltr lit) = Ltr lit
+  fmap eval (And lst) = And $ fmap eval lst
+  fmap eval (Or lst) = Or $ fmap eval lst
 -- type FormStr = Algebra FormF String
 
 showForm :: FormF String -> String
-showForm (Ltr l) = show l
-showForm (And s0 s1) = "(" ++ s0 ++ ")" ++ " and " ++ "(" ++ s1 ++ ")"
-showForm (Or s0 s1) = "(" ++ s0 ++ ")" ++ " or " ++ "(" ++ s1 ++ ")"
+showForm (Ltr lit) = show lit
+showForm (And lst) = "(" ++ intercalate " and " lst ++ ")"
+showForm (Or lst) = "(" ++ intercalate " or " lst ++ ")"
 -- showForm (Not s) = "¬" ++ s
 
 toTree :: FormF (Tree String) -> Tree String
-toTree (Ltr t) = Leaf (show t)
-toTree (And t0 t1) = Twice "and" t0 t1
-toTree (Or t0 t1) = Twice "or" t0 t1
+toTree (Ltr t) = Node (show t) []
+toTree (And lst) = Node "and" lst
+toTree (Or lst) = Node "or" lst
 
 neg :: FormF Form -> Form
 neg (Ltr l) = Fix (Ltr (LS.flipN l))
-neg (And f0 f1) = Fix (Or f0 f1)
-neg (Or f0 f1) = Fix (And f0 f1)
+neg (And lst) = Fix (Or lst)
+neg (Or lst) = Fix (And lst)
+
+-- distribute :: Form -> (Form -> Form -> Form) -> FormF Form -> Form
+-- distribute f c (Ltr l)  = c (Fix (Ltr l)) f
+-- distribute f c (And f0 f1) = c (distribute f makeOr (unFix f0)) (distribute f makeOr (unFix f1))
+-- distribute f c (Or f0 f1) = c (distribute f makeAnd (unFix f0)) (distribute f makeAnd (unFix f1))
+
+-- toCNF :: FormF Form -> Form
+-- toCNF (Ltr l) = Fix (Ltr l)
+-- toCNF (And f0 f1) = Fix (And f0 f1)
+-- toCNF (Or f0 f1) = Fix (Or )

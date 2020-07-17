@@ -1,10 +1,13 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 -- |
 
 module QForm where
 import qualified LogicSymbols as LS
 import qualified QfreeForm as Qfree
 import Data.Fix
-import Common
+import Data.List (intercalate)
+import Data.Tree
 
 data Quantifier a = Forall a | Exists a
 
@@ -23,8 +26,8 @@ flipQtfier (Forall x) = Exists x
 flipQtfier (Exists x) = Forall x
 
 data FormF a = Ltr (LS.Negation LS.Atom)
-            | And a a
-            | Or a a
+            | And [a]
+            | Or [a]
             -- | Not a
             | Qtfy [VarQtfy] a
 
@@ -32,37 +35,35 @@ type Form = Fix FormF
 
 instance Functor FormF  where
   fmap eval (Ltr l) = Ltr l
-  fmap eval (And p q) = And (eval p) (eval q)
-  fmap eval (Or p q) = Or (eval p) (eval q)
+  fmap eval (And lst) = And $ fmap eval lst
+  fmap eval (Or lst) = Or $ fmap eval lst
   fmap eval (Qtfy qlist p) = Qtfy qlist (eval p)
 
 neg :: FormF Form -> Form
 neg (Ltr l) = Fix (Ltr (LS.flipN l))
-neg (And f0 f1) = Fix (Or f0 f1)
-neg (Or f0 f1) = Fix (And f0 f1)
+neg (And lst) = Fix (Or lst)
+neg (Or lst) = Fix (And lst)
 neg (Qtfy qlist f) = Fix (Qtfy (map flipQtfier qlist) f)
 
 showForm :: FormF String -> String
-showForm (Ltr l) = show l
-showForm (And s0 s1) = "(" ++ s0 ++ ")" ++ " and " ++ "(" ++ s1 ++ ")"
-showForm (Or s0 s1) = "(" ++ s0 ++ ")" ++ " or " ++ "(" ++ s1 ++ ")"
+showForm (Ltr lit) = show lit
+showForm (And lst) = "(" ++ intercalate " and " lst ++ ")"
+showForm (Or lst) = "(" ++ intercalate " or " lst ++ ")"
 showForm (Qtfy qlist s) =  "(" ++ concatMap show qlist ++ ".(" ++ show s ++ ")"
 -- showForm (Not s) = "¬" ++ s
 
 toTree :: FormF (Tree String) -> Tree String
-toTree (Ltr t) = Leaf (show t)
-toTree (And t0 t1) = Twice " and " t0 t1
-toTree (Or t0 t1) = Twice " or " t0 t1
-toTree (Qtfy qlist t) = Once (concatMap show qlist) t
-
-
+toTree (Ltr t) = Node (show t) []
+toTree (And lst) = Node "and" lst
+toTree (Or lst) = Node "or" lst
+toTree (Qtfy qlist t) = Node (concatMap show qlist) [t]
 
 -- Start Prenex stuff
 data PrenexForm = Prenex [VarQtfy] Qfree.Form
 
 -- We assume that there no repeated variables in the formula
-prenex :: FormF PrenexForm -> PrenexForm
-prenex (Ltr l) = Prenex [] (Fix (Qfree.Ltr l))
-prenex (And (Prenex l0 f0) (Prenex l1 f1)) = Prenex (l0 ++ l1) (Fix (Qfree.And f0 f1))
-prenex (Or (Prenex l0 f0) (Prenex l1 f1)) = Prenex (l0 ++ l1) (Fix (Qfree.Or f0 f1))
-prenex (Qtfy qlist (Prenex q'list f)) = Prenex (qlist ++ q'list) f
+-- prenex :: FormF PrenexForm -> PrenexForm
+-- prenex (Ltr l) = Prenex [] (Fix (Qfree.Ltr l))
+-- prenex (And (Prenex l0 f0) (Prenex l1 f1)) = Prenex (l0 ++ l1) (Fix (Qfree.And f0 f1))
+-- prenex (Or (Prenex l0 f0) (Prenex l1 f1)) = Prenex (l0 ++ l1) (Fix (Qfree.Or f0 f1))
+-- prenex (Qtfy qlist (Prenex q'list f)) = Prenex (qlist ++ q'list) f

@@ -7,6 +7,7 @@ import UniSet
 import qualified QfreeForm as Qfree
 import qualified QForm as QF
 import Data.Fix
+import Data.Tree (drawTree)
 
 
 constC = VarT "C"
@@ -26,8 +27,10 @@ lit_p = Fix (Qfree.Ltr (Pos pred_p))
 lit_q = Fix (Qfree.Ltr (Neg pred_q))
 lit_p' = Fix (QF.Ltr (Pos pred_p))
 lit_q' = Fix (QF.Ltr (Neg pred_q))
-randomFormula = Fix (Qfree.And lit_p lit_q)
-randomFormula2 = Fix (QF.Qtfy [QF.Forall (Var "x")] (Fix (QF.And lit_p' lit_q')))
+randomFormula = Fix (Qfree.And [lit_p,lit_q])
+randomFormula3 = Fix (Qfree.Or [lit_p,lit_q])
+randomFormulaFinal = Fix (Qfree.And [randomFormula3,randomFormula3])
+randomFormula2 = Fix (QF.Qtfy [QF.Forall (Var "x")] (Fix (QF.And [lit_p',lit_q'])))
 
 (result, emptyValues) = span (\(_, candidates, _) -> (not.(Set.null)) candidates) (unify [eq])
 
@@ -37,11 +40,12 @@ computation = concat [result,[head emptyValues]]
 
 main :: IO ()
 main = do
-        putStrLn "Test main"
-        putStrLn (showEqual eq)
-        putStrLn (show setFinal)
-        putStrLn (show $ Prelude.map (\(x,_,_) -> x) computation)
-        putStrLn (show $ Prelude.map (\(_,y,_) -> y) computation)
-        putStrLn (show $ Prelude.map (\(_,_,z) -> z) computation)
-        putStrLn (show $ cata Qfree.toTree randomFormula)
-        putStrLn (show $ cata QF.toTree $ (cata QF.neg randomFormula2))
+        -- putStrLn "Test main"
+        -- putStrLn (showEqual eq)
+        -- putStrLn (show setFinal)
+        -- putStrLn (show $ Prelude.map (\(x,_,_) -> x) computation)
+        -- putStrLn (show $ Prelude.map (\(_,y,_) -> y) computation)
+        -- putStrLn (show $ Prelude.map (\(_,_,z) -> z) computation)
+        -- putStrLn (show $ cata Qfree.toTree $ cata (Qfree.distribute randomFormula3 Qfree.makeOr) randomFormulaFinal)
+        putStrLn (drawTree $ cata Qfree.toTree randomFormula)
+        -- putStrLn (show $ cata QF.toTree $ (cata QF.neg randomFormula2))
