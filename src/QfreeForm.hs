@@ -3,8 +3,9 @@
 module QfreeForm where
 import qualified LogicSymbols as LS
 import Data.Tree
-import Data.Fix
-import Data.List (intercalate)
+-- import Data.Fix
+import Data.Functor.Foldable
+import Data.List (intercalate, tails)
 -- type Algebra f a = f a -> a
 -- I don't know what I am doing LMAO
 data FormF a = Ltr (LS.Negation LS.Atom)
@@ -46,13 +47,24 @@ flatOr f = [Fix f]
 
 flat :: FormF Form -> Form
 flat (Ltr l) = Fix (Ltr l)
-flat (And lst) = Fix (And (concatMap (flatAnd . unFix) lst))
-flat (Or lst) = Fix (Or (concatMap (flatOr . unFix) lst))
+flat (And lst) = Fix (And (concatMap (flatAnd . unfix) lst))
+flat (Or lst) = Fix (Or (concatMap (flatOr . unfix) lst))
 
 -- distribute :: Form -> (Form -> Form -> Form) -> FormF Form -> Form
 -- distribute f c (Ltr l)  = c (Fix (Ltr l)) f
--- distribute f c (And f0 f1) = c (distribute f makeOr (unFix f0)) (distribute f makeOr (unFix f1))
--- distribute f c (Or f0 f1) = c (distribute f makeAnd (unFix f0)) (distribute f makeAnd (unFix f1))
+-- distribute f c (And f0 f1) = c (distribute f makeOr (unfix f0)) (distribute f makeOr (unfix f1))
+-- distribute f c (Or f0 f1) = c (distribute f makeAnd (unfix f0)) (distribute f makeAnd (unfix f1))
+
+
+
+-- distribute :: FormF Form -> Form
+-- distribute (Ltr l) = Fix (Ltr l)
+-- distribute (And lst) = Fix (Or (fmap (cata distribute . pushAnd) candidates))
+--   where pushAnd (x:xs) = (Fix (And [x, xs]))
+--         candidates = init $ tails lst
+-- distribute (Or lst) = Fix (And (fmap (cata distribute . pushOr) candidates))
+--   where pushOr x = Fix (Or x)
+--         candidates = init $ tails lst
 
 -- toCNF :: FormF Form -> Form
 -- toCNF (Ltr l) = Fix (Ltr l)

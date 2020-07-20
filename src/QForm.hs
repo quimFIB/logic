@@ -5,7 +5,8 @@
 module QForm where
 import qualified LogicSymbols as LS
 import qualified QfreeForm as Qfree
-import Data.Fix
+-- import Data.Fix
+import Data.Functor.Foldable
 import Data.List (intercalate)
 import Data.Tree
 
@@ -68,8 +69,8 @@ flatOr f = [Fix f]
 
 flat :: FormF Form -> Form
 flat (Ltr l) = Fix (Ltr l)
-flat (And lst) = Fix (And (concatMap (flatAnd . unFix) lst))
-flat (Or lst) = Fix (Or (concatMap (flatOr . unFix) lst))
+flat (And lst) = Fix (And (concatMap (flatAnd . unfix) lst))
+flat (Or lst) = Fix (Or (concatMap (flatOr . unfix) lst))
 flat (Qtfy qlist f) = Fix (Qtfy qlist f)
 
 -- Start Prenex stuff

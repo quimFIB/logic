@@ -6,7 +6,8 @@ import Data.Set as Set
 import UniSet
 import qualified QfreeForm as Qfree
 import qualified QForm as QF
-import Data.Fix
+-- import Data.Fix
+import Data.Functor.Foldable
 import Data.Tree (drawTree)
 
 
@@ -40,7 +41,7 @@ computation = concat [result,[head emptyValues]]
 
 main :: IO ()
 main = do
-        -- putStrLn "Test main"
+        putStrLn "Test main"
         -- putStrLn (showEqual eq)
         -- putStrLn (show setFinal)
         -- putStrLn (show $ Prelude.map (\(x,_,_) -> x) computation)
@@ -48,5 +49,5 @@ main = do
         -- putStrLn (show $ Prelude.map (\(_,_,z) -> z) computation)
         -- putStrLn (show $ cata Qfree.toTree $ cata (Qfree.distribute randomFormula3 Qfree.makeOr) randomFormulaFinal)
         -- putStrLn (drawTree $ cata Qfree.toTree randomFormulaFinal)
-        putStrLn (drawTree $ cata Qfree.toTree $ cata Qfree.flat randomFormulaFinal)
+        -- putStrLn (drawTree $ cata Qfree.toTree $ cata Qfree.distribute randomFormulaFinal)
         -- putStrLn (show $ cata QF.toTree $ (cata QF.neg randomFormula2))
