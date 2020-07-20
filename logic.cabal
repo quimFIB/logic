@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bfc6dff5bc2e22d03e70d849269447c14f6ea0029c4f982c6a3ac37bab7b9263
+-- hash: c2b1cfedb87e42f481224704cf8eb8dc6e93072478899b6017b21c08e0600be3
 
 name:           logic
 version:        0.1.0.0
@@ -27,12 +27,8 @@ source-repository head
 
 library
   exposed-modules:
-      Clause
-      Common
       EqSet
       LogicSymbols
-      QForm
-      QfreeForm
       UnifAlg
       UniSet
   other-modules:
@@ -45,6 +41,7 @@ library
     , data-fix
     , multiset
     , recursion-schemes
+    , tptp
   default-language: Haskell2010
 
 executable logic-exe
@@ -61,6 +58,7 @@ executable logic-exe
     , logic
     , multiset
     , recursion-schemes
+    , tptp
   default-language: Haskell2010
 
 test-suite logic-test
@@ -78,4 +76,5 @@ test-suite logic-test
     , logic
     , multiset
     , recursion-schemes
+    , tptp
   default-language: Haskell2010

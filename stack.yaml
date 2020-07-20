@@ -35,7 +35,9 @@ packages:
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
 #
-# extra-deps:
+extra-deps:
+  - tptp-0.1.2.0@sha256:5e0c6f2cc556f3af448bca6b0fd94f14dcdc51a2ac28fdbedc712f758dcba627,3503
+  - prettyprinter-1.4.0@sha256:3b02d245d5f7ee0caf956471260b254d404bd7675e41f8c38430c951db8812c7,5375
 
 
 

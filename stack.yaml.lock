@@ -3,7 +3,21 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: tptp-0.1.2.0@sha256:5e0c6f2cc556f3af448bca6b0fd94f14dcdc51a2ac28fdbedc712f758dcba627,3503
+    pantry-tree:
+      size: 20114
+      sha256: f6e243b3ec97e6a7a6eaadb282266b3db4cf32c327d5fb13d57a9da44c5a3c5a
+  original:
+    hackage: tptp-0.1.2.0@sha256:5e0c6f2cc556f3af448bca6b0fd94f14dcdc51a2ac28fdbedc712f758dcba627,3503
+- completed:
+    hackage: prettyprinter-1.4.0@sha256:3b02d245d5f7ee0caf956471260b254d404bd7675e41f8c38430c951db8812c7,5375
+    pantry-tree:
+      size: 2105
+      sha256: 2b4a7f834e5d6c17cec1dc13cd2292c2a976277d6c94b083296f8d7a2348c14f
+  original:
+    hackage: prettyprinter-1.4.0@sha256:3b02d245d5f7ee0caf956471260b254d404bd7675e41f8c38430c951db8812c7,5375
 snapshots:
 - completed:
     size: 531701

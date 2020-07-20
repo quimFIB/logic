@@ -25,6 +25,7 @@ dependencies:
 - containers
 - data-fix
 - recursion-schemes
+- tptp
 
 library:
   source-dirs: src
