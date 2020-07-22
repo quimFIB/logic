@@ -70,7 +70,10 @@ getVarsEq (Equal t_l t_r) = Map.unionWith (+) (getVarsTerm t_l) (getVarsTerm t_r
 
 -- Helpers for FOL
 
-data Atom = Pred String [Term]
+data Atom = Pred String [Term] deriving (Eq)
+
+instance Ord Atom where
+  (<=) (Pred s0 t0) (Pred s1 t1) = length t0 <= length t1 || s0 <= s1
 
 showAtom :: Atom -> String
 showAtom (Pred str []) =  str
@@ -79,7 +82,14 @@ showAtom (Pred str l) =  str ++ "(" ++ intercalate "," (map showTerm l) ++ ")"
 instance Show Atom where
   show = showAtom
 
-data Negation a = Pos a | Neg a
+data Negation a = Pos a | Neg a deriving (Eq)
+
+instance Ord a => Ord (Negation a) where
+  (<=) (Pos _) (Neg _) = False
+  (<=) (Neg _) (Pos _) = True
+  (<=) (Pos a0) (Pos a1) = a0 <= a1
+  (<=) (Neg a0) (Neg a1) = a0 <= a1
+
 
 showNegation :: Show a => Negation a -> String
 showNegation (Pos x) = show x
@@ -93,7 +103,7 @@ flipN (Pos x) = Neg x
 flipN (Neg x) = Pos x
 
 -- For some reason this type synonym gives quite a few errors???
-newtype Literal = Negation Atom
+type Literal = Negation Atom
 
 showLiteral :: Negation Atom -> String
 showLiteral (Pos a) = show a

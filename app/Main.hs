@@ -3,7 +3,9 @@ module Main where
 import LogicSymbols
 import UnifAlg
 import Data.Set as Set
-import UniSet
+import QfreeForm
+import Data.Tree (drawTree)
+import Data.Functor.Foldable
 
 
 constC = VarT "C"
@@ -26,6 +28,43 @@ computation = concat [result,[head emptyValues]]
 
 (setFinal, candidatesFinal, _) = head emptyValues
 
+-- pred_p = Pred "P" [g_of_cx, h_of_z]
+-- pred_q = Pred "Q" [h_of_yk, constK]
+-- lit_p = Fix (Qfree.Ltr (Pos pred_p))
+-- lit_q = Fix (Qfree.Ltr (Neg pred_q))
+-- lit_p' = Fix (QF.Ltr (Pos pred_p))
+-- lit_q' = Fix (QF.Ltr (Neg pred_q))
+-- randomFormula = Fix (Qfree.Or [lit_p,lit_q])
+-- randomFormula3 = Fix (Qfree.And [lit_p,lit_q])
+-- randomFormulaFinal = Fix (Qfree.And [randomFormula3,randomFormula3, randomFormula])
+-- randomFormula2 = Fix (QF.Qtfy [QF.Forall (Var "x")] (Fix (QF.And [lit_p',lit_q'])))
+
+pred1 = Pred "P1" []
+pred2 = Pred "P2" []
+pred3 = Pred "P3" []
+pred4 = Pred "P4" []
+pred5 = Pred "P5" []
+pred6 = Pred "P6" []
+pred7 = Pred "P7" []
+pred8 = Pred "P8" []
+
+lit1 = Fix (Ltr (Pos pred1))
+lit2 = Fix (Ltr (Pos pred2))
+lit3 = Fix (Ltr (Pos pred3))
+lit4 = Fix (Ltr (Pos pred4))
+lit5 = Fix (Ltr (Pos pred5))
+lit6 = Fix (Ltr (Pos pred6))
+lit7 = Fix (Ltr (Pos pred7))
+lit8 = Fix (Ltr (Pos pred8))
+
+clause11 = Fix (Or [lit1, lit2])
+clause12 = Fix (Or [lit3, lit4])
+
+clause21 = Fix (Or [lit5, lit6])
+clause22 = Fix (Or [lit7, lit8])
+
+formula = Fix (Or [(Fix (And [clause11,clause12])), (Fix (And [clause21,clause22]))])
+
 main :: IO ()
 main = do
         putStrLn "Test main"
@@ -34,3 +73,4 @@ main = do
         -- putStrLn (show $ Prelude.map (\(x,_,_) -> x) computation)
         -- putStrLn (show $ Prelude.map (\(_,y,_) -> y) computation)
         -- putStrLn (show $ Prelude.map (\(_,_,z) -> z) computation)
+        putStrLn (show $ cata toCNF formula)
