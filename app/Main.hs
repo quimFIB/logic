@@ -49,13 +49,13 @@ pred7 = Pred "P7" []
 pred8 = Pred "P8" []
 
 lit1 = Fix (Ltr (Pos pred1))
-lit2 = Fix (Ltr (Pos pred2))
+lit2 = Fix (Ltr (Neg pred2))
 lit3 = Fix (Ltr (Pos pred3))
-lit4 = Fix (Ltr (Pos pred4))
+lit4 = Fix (Ltr (Neg pred4))
 lit5 = Fix (Ltr (Pos pred5))
-lit6 = Fix (Ltr (Pos pred6))
+lit6 = Fix (Ltr (Neg pred6))
 lit7 = Fix (Ltr (Pos pred7))
-lit8 = Fix (Ltr (Pos pred8))
+lit8 = Fix (Ltr (Neg pred8))
 
 clause11 = Fix (Or [lit1, lit2])
 clause12 = Fix (Or [lit3, lit4])

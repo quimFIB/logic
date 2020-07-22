@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 -- |
 
 module QfreeForm where
@@ -6,7 +8,7 @@ import Data.Tree
 -- import Data.Fix
 import Data.Functor.Foldable
 import Data.List (intercalate, tails)
-import Data.Set
+import qualified Data.Set as Set
 -- type Algebra f a = f a -> a
 -- I don't know what I am doing LMAO
 data FormF a = Ltr (LS.Negation LS.Atom)
@@ -51,11 +53,17 @@ flat (Ltr l) = Fix (Ltr l)
 flat (And lst) = Fix (And (concatMap (flatAnd . unfix) lst))
 flat (Or lst) = Fix (Or (concatMap (flatOr . unfix) lst))
 
-type Clause = Set LS.Literal
+newtype Clause = Clause (Set.Set LS.Literal)
+
+instance Show Clause where
+  show (Clause c) = "{" ++ intercalate "," (Set.elems (Set.map show c)) ++ "}"
+
 newtype CNF = CNF [Clause] deriving (Show)
 
 instance Semigroup CNF where
-  (<>) (CNF l0) (CNF l1) = CNF (fmap union l0 <*> l1)
+  (<>) (CNF l0) (CNF l1) = CNF $ map Clause (fmap Set.union l0' <*> l1')
+    where l0' = map (\(Clause s) -> s) l0
+          l1' = map (\(Clause s) -> s) l1
 
 extend :: CNF -> CNF -> CNF
 extend (CNF l0) (CNF l1) = CNF (l0 ++ l1)
@@ -77,6 +85,6 @@ extend (CNF l0) (CNF l1) = CNF (l0 ++ l1)
 --         candidates = init $ tails lst
 
 toCNF :: FormF CNF -> CNF
-toCNF (Ltr l) = CNF [singleton l]
+toCNF (Ltr l) = CNF [Clause (Set.singleton l)]
 toCNF (And lst) = Prelude.foldl extend (CNF []) lst
 toCNF (Or lst) = Prelude.foldl1 (<>) lst
