@@ -2,7 +2,7 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 -- |
 
-module QfreeForm where
+module Form where
 import qualified LogicSymbols as LS
 import Data.Tree
 -- import Data.Fix
@@ -12,9 +12,9 @@ import qualified Data.Set as Set
 -- type Algebra f a = f a -> a
 -- I don't know what I am doing LMAO
 data FormF a = Ltr (LS.Negation LS.Atom)
-            | And [a]
-            | Or [a]
-            -- | Not a
+             | And [a]
+             | Or [a]
+             -- | Not a
 
 type Form = Fix FormF
 

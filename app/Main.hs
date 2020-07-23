@@ -3,7 +3,7 @@ module Main where
 import LogicSymbols
 import UnifAlg
 import Data.Set as Set
-import QfreeForm
+import Form
 import Data.Tree (drawTree)
 import Data.Functor.Foldable
 
