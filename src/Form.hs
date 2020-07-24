@@ -7,7 +7,7 @@ import qualified LogicSymbols as LS
 import Data.Tree
 -- import Data.Fix
 import Data.Functor.Foldable
-import Data.List (intercalate, tails)
+import Data.List (intercalate)
 import qualified Data.Set as Set
 -- type Algebra f a = f a -> a
 -- I don't know what I am doing LMAO

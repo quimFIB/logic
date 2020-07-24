@@ -70,10 +70,10 @@ getVarsEq (Equal t_l t_r) = Map.unionWith (+) (getVarsTerm t_l) (getVarsTerm t_r
 
 -- Helpers for FOL
 
-data Atom = Pred String [Term] deriving (Eq)
+data Atom = Pred String [Term] deriving (Eq, Ord)
 
-instance Ord Atom where
-  (<=) (Pred s0 t0) (Pred s1 t1) = length t0 <= length t1 || s0 <= s1
+-- instance Ord Atom where
+--   (<=) (Pred s0 t0) (Pred s1 t1) = length t0 < length t1 || s0 < s1 || or (fmap (uncurry (<=)) (zip t0 t1))
 
 showAtom :: Atom -> String
 showAtom (Pred str []) =  str

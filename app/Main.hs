@@ -1,7 +1,7 @@
 module Main where
 
 import LogicSymbols
-import UnifAlg
+import Unification
 import Data.Set as Set
 import Form
 import Data.Tree (drawTree)
@@ -19,7 +19,8 @@ f_of_g_of_yk = Term "f" [g_of_h_of_z_k]
 
 eq = Equal f_of_g_of_cx f_of_g_of_yk
 
-pred_p = Pred "P" [g_of_cx, h_of_z]
+pred_p = Pred "P" [h_of_z, g_of_cx]
+pred_p' = Pred "P" [constC, g_of_cx, constK]
 pred_q = Pred "Q" [h_of_yk, constK]
 
 (result, emptyValues) = span (\(_, candidates, _) -> (not.(Set.null)) candidates) (unify [eq])
@@ -68,9 +69,9 @@ formula = Fix (Or [(Fix (And [clause11,clause12])), (Fix (And [clause21,clause22
 main :: IO ()
 main = do
         putStrLn "Test main"
-        -- putStrLn (showEqual eq)
-        -- putStrLn (show setFinal)
-        -- putStrLn (show $ Prelude.map (\(x,_,_) -> x) computation)
-        -- putStrLn (show $ Prelude.map (\(_,y,_) -> y) computation)
-        -- putStrLn (show $ Prelude.map (\(_,_,z) -> z) computation)
+        putStrLn (showEqual eq)
+        putStrLn (show setFinal)
+        putStrLn (show $ Prelude.map (\(x,_,_) -> x) computation)
+        putStrLn (show $ Prelude.map (\(_,y,_) -> y) computation)
+        putStrLn (show $ Prelude.map (\(_,_,z) -> z) computation)
         putStrLn (show $ cata toCNF formula)
