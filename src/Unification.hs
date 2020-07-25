@@ -33,6 +33,13 @@ substitute eq@(LS.Equal (LS.VarT _) t) s = let {modifications = map fst $ filter
 
 substitute _ _ = empty
 
+
+substitution :: Map.Map LS.Var LS.Term -> LS.Term -> Maybe LS.Term
+substitution m (LS.VarT x) = Map.lookup (LS.Var x) m
+substitution m (LS.Term t t_list) = Just (LS.Term t t_result)
+  where t'_list = fmap (substitution m) t_list
+        t_result = fmap (\(a,b) -> case b of {Nothing -> a; (Just b') -> b'}) (zip t_list t'_list)
+
 fromList :: [LS.Equal] -> UniSet
 fromList = foldl (flip insert) empty
 
