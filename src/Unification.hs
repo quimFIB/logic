@@ -6,6 +6,7 @@ import qualified LogicSymbols as LS
 import qualified EqSet as ES
 import qualified Data.Set as Set
 import qualified Data.Map as Map
+import Control.Monad (foldM)
 
 data UniSet = UniSet {vSet :: Map.Map LS.Var Int, eqSet :: Set.Set LS.Equal}
 
@@ -33,12 +34,13 @@ substitute eq@(LS.Equal (LS.VarT _) t) s = let {modifications = map fst $ filter
 
 substitute _ _ = empty
 
+toMap :: UniSet -> Maybe (Map.Map LS.Var LS.Term)
+toMap uset = foldM (\s p -> case p of {Just (x,t) -> return (Map.insert x t s) ; Nothing -> Nothing}) Map.empty (fmap (\(LS.Equal t0 t1) -> do x <- LS.term2var t0; return (x, t1)) equalities)
+  where equalities = Set.toList $ eqSet uset
 
-substitution :: Map.Map LS.Var LS.Term -> LS.Term -> Maybe LS.Term
-substitution m (LS.VarT x) = Map.lookup (LS.Var x) m
-substitution m (LS.Term t t_list) = Just (LS.Term t t_result)
-  where t'_list = fmap (substitution m) t_list
-        t_result = fmap (\(a,b) -> case b of {Nothing -> a; (Just b') -> b'}) (zip t_list t'_list)
+substitution :: Map.Map LS.Var LS.Term -> LS.Term -> LS.Term
+substitution m xt@(LS.VarT x) = maybe xt id (Map.lookup (LS.Var x) m)
+substitution m (LS.Term t t_list) = LS.Term t (fmap (substitution m) t_list)
 
 fromList :: [LS.Equal] -> UniSet
 fromList = foldl (flip insert) empty
