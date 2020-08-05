@@ -38,9 +38,11 @@ toMap :: UniSet -> Maybe (Map.Map LS.Var LS.Term)
 toMap uset = foldM (\s p -> case p of {Just (x,t) -> return (Map.insert x t s) ; Nothing -> Nothing}) Map.empty (fmap (\(LS.Equal t0 t1) -> do x <- LS.term2var t0; return (x, t1)) equalities)
   where equalities = Set.toList $ eqSet uset
 
-substitution :: Map.Map LS.Var LS.Term -> LS.Term -> LS.Term
-substitution m xt@(LS.VarT x) = maybe xt id (Map.lookup (LS.Var x) m)
-substitution m (LS.Term t t_list) = LS.Term t (fmap (substitution m) t_list)
+newtype Substitution = Sub (LS.Term -> LS.Term)
+
+substitutionMap :: Map.Map LS.Var LS.Term -> LS.Term -> LS.Term
+substitutionMap m xt@(LS.VarT x) = maybe xt id (Map.lookup (LS.Var x) m)
+substitutionMap m (LS.Term t t_list) = LS.Term t (fmap (substitutionMap m) t_list)
 
 fromList :: [LS.Equal] -> UniSet
 fromList = foldl (flip insert) empty
@@ -106,7 +108,11 @@ unifyStep (set, candidates, eq0@(LS.Equal t_l t_r))
 unifyHeader :: (Set.Set LS.Equal -> LS.Equal) -> (UniSet, Set.Set LS.Equal, Log) -> (UniSet, Set.Set LS.Equal, Log)
 unifyHeader choose (set, candidates, _) = unifyStep (set, candidates, choose candidates)
 
-unify :: [LS.Equal] -> [(UniSet, Set.Set LS.Equal, Log)]
-unify l = iterate (unifyHeader (Set.elemAt 0)) (set0, candidates0, Initial)
+unifyRaw :: [LS.Equal] -> [(UniSet, Set.Set LS.Equal, Log)]
+unifyRaw l = iterate (unifyHeader (Set.elemAt 0)) (set0, candidates0, Initial)
   where set0 = fromList l
         candidates0 = Set.fromList l
+
+unify :: [LS.Equal] -> UniSet
+unify l = let (_, result) = span (\(_, candidates, _) -> (not.Set.null) candidates) (unifyRaw l)
+              (uniSet, _, _) = head result in uniSet

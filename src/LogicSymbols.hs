@@ -82,7 +82,7 @@ showAtom (Pred str l) =  str ++ "(" ++ intercalate "," (map showTerm l) ++ ")"
 instance Show Atom where
   show = showAtom
 
-data Negation a = Pos a | Neg a deriving (Eq)
+data Negation a = Pos {getNegated::a} | Neg {getNegated::a} deriving (Eq)
 
 instance Ord a => Ord (Negation a) where
   (<=) (Pos _) (Neg _) = False
