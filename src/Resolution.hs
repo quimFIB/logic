@@ -7,13 +7,13 @@ import LogicSymbols
 import Form
 import Data.Set
 
-unifiable :: Literal -> Literal -> Bool
-unifiable (Pos (Pred p p_terms)) (Neg (Pred q q_terms)) = (p == q) && (length p_terms == length q_terms)
-unifiable (Neg (Pred p p_terms)) (Pos (Pred q q_terms)) = (p == q) && (length p_terms == length q_terms)
-unifiable _ _ = False
+resolvable :: Literal -> Literal -> Bool
+resolvable (Pos (Pred p p_terms)) (Neg (Pred q q_terms)) = (p == q) && (length p_terms == length q_terms)
+resolvable (Neg (Pred p p_terms)) (Pos (Pred q q_terms)) = (p == q) && (length p_terms == length q_terms)
+resolvable _ _ = False
 
 candidates :: Clause -> Clause -> [(Literal,Literal)]
-candidates (Clause c0) (Clause c1) = [(x,y) | x <- elems c0, y <- elems c1, unifiable x y]
+candidates (Clause c0) (Clause c1) = [(x,y) | x <- elems c0, y <- elems c1, resolvable x y]
 
 factor :: Literal -> Literal -> Maybe Substitution
 factor ltr0 ltr1 = let Pred _ trmList0 = getNegated ltr0
