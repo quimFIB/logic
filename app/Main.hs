@@ -23,7 +23,7 @@ pred_p = Pred "P" [h_of_z, g_of_cx]
 pred_p' = Pred "P" [constC, g_of_cx, constK]
 pred_q = Pred "Q" [h_of_yk, constK]
 
-(result, emptyValues) = span (\(_, candidates, _) -> (not.(Set.null)) candidates) (unify [eq])
+(result, emptyValues) = span (\(_, candidates, _) -> (not.(Set.null)) candidates) (unifyRaw [eq])
 
 computation = concat [result,[head emptyValues]]
 
