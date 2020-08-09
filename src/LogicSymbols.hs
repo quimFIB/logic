@@ -1,8 +1,8 @@
 module LogicSymbols where
 
 import Data.List (intercalate)
-
 import qualified Data.Map as Map
+import MyLens
 
 newtype Var = Var String deriving (Eq, Ord, Show)
 
@@ -72,6 +72,9 @@ getVarsEq (Equal t_l t_r) = Map.unionWith (+) (getVarsTerm t_l) (getVarsTerm t_r
 
 data Atom = Pred String [Term] deriving (Eq, Ord)
 
+atomTermsLens :: Lens Atom [Term]
+atomTermsLens f (Pred s terms) = Pred s <$> f terms
+
 -- instance Ord Atom where
 --   (<=) (Pred s0 t0) (Pred s1 t1) = length t0 < length t1 || s0 < s1 || or (fmap (uncurry (<=)) (zip t0 t1))
 
@@ -83,6 +86,9 @@ instance Show Atom where
   show = showAtom
 
 data Negation a = Pos {getNegated::a} | Neg {getNegated::a} deriving (Eq)
+
+negationLens :: Lens (Negation a) a
+negationLens f negation = (\a -> negation {getNegated = a}) <$> f (getNegated negation)
 
 instance Ord a => Ord (Negation a) where
   (<=) (Pos _) (Neg _) = False

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 236b3cfd634cd5e13a521ab3c8ed6386f61d6923b19802d9f8a8d62c586f9a00
+-- hash: 4e5ecceb4dbab01c8763e38e6d3aaf030adacb1e9227a9e976d9938cd1631306
 
 name:           logic
 version:        0.1.0.0
@@ -30,6 +30,7 @@ library
       EqSet
       Form
       LogicSymbols
+      MyLens
       QForm
       Resolution
       Unification
