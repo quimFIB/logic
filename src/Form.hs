@@ -9,6 +9,8 @@ import Data.Tree
 import Data.Functor.Foldable
 import Data.List (intercalate)
 import qualified Data.Set as Set
+import MyLens
+
 -- type Algebra f a = f a -> a
 -- I don't know what I am doing LMAO
 data FormF a = Ltr (LS.Negation LS.Atom)
@@ -54,6 +56,9 @@ flat (And lst) = Fix (And (concatMap (flatAnd . unfix) lst))
 flat (Or lst) = Fix (Or (concatMap (flatOr . unfix) lst))
 
 newtype Clause = Clause (Set.Set LS.Literal)
+
+clauseLens :: Lens Clause (Set.Set LS.Literal)
+clauseLens f (Clause s) = Clause <$> f s
 
 instance Show Clause where
   show (Clause c) = "{" ++ intercalate "," (Set.elems (Set.map show c)) ++ "}"
