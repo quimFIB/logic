@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4e5ecceb4dbab01c8763e38e6d3aaf030adacb1e9227a9e976d9938cd1631306
+-- hash: e2ce33b09f921be1f71b72e5f57850de808160bab6bf30433a626e3e85ac9d3d
 
 name:           logic
 version:        0.1.0.0
@@ -42,9 +42,11 @@ library
       base >=4.7 && <5
     , containers
     , data-fix
+    , hashable
     , multiset
     , recursion-schemes
     , tptp
+    , unordered-containers
   default-language: Haskell2010
 
 executable logic-exe
@@ -58,10 +60,12 @@ executable logic-exe
       base >=4.7 && <5
     , containers
     , data-fix
+    , hashable
     , logic
     , multiset
     , recursion-schemes
     , tptp
+    , unordered-containers
   default-language: Haskell2010
 
 test-suite logic-test
@@ -76,8 +80,10 @@ test-suite logic-test
       base >=4.7 && <5
     , containers
     , data-fix
+    , hashable
     , logic
     , multiset
     , recursion-schemes
     , tptp
+    , unordered-containers
   default-language: Haskell2010

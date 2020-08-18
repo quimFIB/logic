@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 -- |
@@ -8,8 +9,10 @@ import Data.Tree
 -- import Data.Fix
 import Data.Functor.Foldable
 import Data.List (intercalate)
-import qualified Data.Set as Set
+import qualified Data.HashSet as Set
 import MyLens
+import Data.Hashable (Hashable)
+import GHC.Generics (Generic)
 
 -- type Algebra f a = f a -> a
 -- I don't know what I am doing LMAO
@@ -55,13 +58,14 @@ flat (Ltr l) = Fix (Ltr l)
 flat (And lst) = Fix (And (concatMap (flatAnd . unfix) lst))
 flat (Or lst) = Fix (Or (concatMap (flatOr . unfix) lst))
 
-newtype Clause = Clause (Set.Set LS.Literal)
+newtype Clause = Clause (Set.HashSet LS.Literal) deriving (Eq, Generic)
+instance Hashable Clause
 
-clauseLens :: Lens Clause (Set.Set LS.Literal)
+clauseLens :: Lens Clause (Set.HashSet LS.Literal)
 clauseLens f (Clause s) = Clause <$> f s
 
 instance Show Clause where
-  show (Clause c) = "{" ++ intercalate "," (Set.elems (Set.map show c)) ++ "}"
+  show (Clause c) = "{" ++ intercalate "," (Set.toList (Set.map show c)) ++ "}"
 
 newtype CNF = CNF [Clause] deriving (Show)
 

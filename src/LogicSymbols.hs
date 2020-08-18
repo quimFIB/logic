@@ -1,4 +1,10 @@
+{-# LANGUAGE DeriveGeneric #-}
+
 module LogicSymbols where
+
+import GHC.Generics (Generic)
+import Data.Hashable
+
 
 import Data.List (intercalate)
 import qualified Data.Map as Map
@@ -15,7 +21,8 @@ var2term (Var s) = VarT s
 
 data Term = VarT String
           | Term String [Term]
-          deriving (Eq, Ord)
+          deriving (Eq, Ord, Generic)
+instance Hashable Term
 
 term2var :: Term -> Maybe Var
 term2var t = case t of
@@ -70,7 +77,9 @@ getVarsEq (Equal t_l t_r) = Map.unionWith (+) (getVarsTerm t_l) (getVarsTerm t_r
 
 -- Helpers for FOL
 
-data Atom = Pred String [Term] deriving (Eq, Ord)
+data Atom = Pred String [Term] deriving (Eq, Ord, Generic)
+
+instance Hashable Atom
 
 atomTermsLens :: Lens Atom [Term]
 atomTermsLens f (Pred s terms) = Pred s <$> f terms
@@ -85,7 +94,9 @@ showAtom (Pred str l) =  str ++ "(" ++ intercalate "," (map showTerm l) ++ ")"
 instance Show Atom where
   show = showAtom
 
-data Negation a = Pos {getNegated::a} | Neg {getNegated::a} deriving (Eq)
+data Negation a = Pos {getNegated::a} | Neg {getNegated::a} deriving (Eq, Generic)
+
+instance Hashable a => Hashable (Negation a)
 
 negationLens :: Lens (Negation a) a
 negationLens f negation = (\a -> negation {getNegated = a}) <$> f (getNegated negation)
