@@ -10,6 +10,9 @@ import Data.Functor.Foldable
 
 constC = VarT "C"
 constK = VarT "K"
+
+-- constC = Term "C" []
+-- constK = Term "K" []
 g_of_cx = Term "g" [constC, VarT "x"]
 f_of_g_of_cx = Term "f" [g_of_cx]
 h_of_z = Term "h" [VarT "x"]
@@ -71,7 +74,7 @@ main = do
         putStrLn "Test main"
         putStrLn (showEqual eq)
         putStrLn (show setFinal)
-        putStrLn (show $ Prelude.map (\(x,_,_) -> x) computation)
-        putStrLn (show $ Prelude.map (\(_,y,_) -> y) computation)
-        putStrLn (show $ Prelude.map (\(_,_,z) -> z) computation)
+        putStrLn (show $ zip [1..] $ Prelude.map (\(x,_,_) -> x) computation)
+        putStrLn (show $ zip [1..] $ Prelude.map (\(_,y,_) -> y) computation)
+        putStrLn (show $ zip [0..] $ Prelude.map (\(_,_,z) -> z) computation)
         putStrLn (show $ cata toCNF formula)

@@ -7,6 +7,7 @@ import qualified EqSet as ES
 import qualified Data.Set as Set
 import qualified Data.Map as Map
 import Control.Monad (foldM)
+import Debug.Trace (trace)
 
 data UniSet = UniSet {vSet :: Map.Map LS.Var Int, eqSet :: Set.Set LS.Equal}
 
@@ -53,6 +54,7 @@ showEqs s = show (eqSet s)
 instance Show UniSet where
   show = showEqs
 
+-- data Case = Var2Var | Term2Var | Var2Term | Term2Term | Var2Cons | Cons2Var
 data Case = Var2Var | Term2Var | Var2Term | Term2Term
 
 showCase :: Case -> String
